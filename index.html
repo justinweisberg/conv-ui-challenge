@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Registry Challenge</title>
+    <meta name="author" content="Justin Weisberg">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+  </head>
+  <body>
+    <div class="registry-action-controls">
+      <button id="btn-assign-number">Assign Number</button>
+      <button id="btn-add-number">Add Number</button>
+      <input type="text" id="add-num-val"></input>
+      <button id="btn-delete-number">Delete Number</button>
+      <input type="text" id="del-num-val"></input>
+    </div>
+    <div class="registry-show-registered">
+      Currently registered: <span class="registry-currently-registered"></span>
+      <br />
+      Next available: <span class="registry-next-available"></span>
+    </div>
+    <script src="lib/registry.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

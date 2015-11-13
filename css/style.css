@@ -1,0 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: pink;
+}
+
+.registry-action-controls {
+  float: left;
+  width: 50%
+}
+
+.registry-action-controls button {
+  display: block;
+}
+
+.registry-show-registered {
+  float: right;
+  width: 50%;
+}

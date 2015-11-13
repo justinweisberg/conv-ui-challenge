@@ -1,0 +1,143 @@
+if(typeof module !== 'undefined') {
+  exports = module.exports = {};
+}
+
+//Shim for IE<8
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length >>> 0;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
+}
+//End Shim
+
+var Registry = function () {
+  //store currently registered numbers
+ // this.currentlyRegistered = [];
+  this.currentlyRegistered = [];
+
+  //tracks the next available default assigned number
+  //this allows us to not have to sort or iterate through on each action
+  this.nextAvailableNumber = 1;
+
+  /**
+  @function assignNumber assigns the lowest available number to the user
+  @returns currentlyRegistered
+  */
+  this.assignNumber = function() {
+    if(this.currentlyRegistered.indexOf(this.nextAvailableNumber) < 0) {
+      this.currentlyRegistered.splice(this.nextAvailableNumber - 1, 0, this.nextAvailableNumber);
+    } else {
+      this.currentlyRegistered[this.nextAvailableNumber] = this.nextAvailableNumber + 1;
+      this.nextAvailableNumber++;
+    }
+    this.nextAvailableNumber = this.determineNextAvailableNumber();
+    console.log('new next assign: ', this.nextAvailableNumber);
+    return this.currentlyRegistered;
+  };
+
+  /**
+  @function determineNextAvailable determines the next available number in
+            currentlyRegistered
+  @returns Number - the next available number in currentlyRegistered
+  **/
+  this.determineNextAvailableNumber = function() {
+    //Because we start with 1, the index of nextAvailable will always be its
+    //  value-1.  As such, we can assume that using nextAvailable as an index
+    //  should reference the index 1 greater than the index of nextAvailable
+    console.log('old next dna: ', this.nextAvailableNumber);
+    for(i = this.nextAvailableNumber; i <= this.currentlyRegistered.length + 1; i++) {
+      console.log('nextAvailable: ', this.nextAvailableNumber);
+      console.log('i: ',i);
+      console.log('currentlyRegistered: ', this.currentlyRegistered);
+      console.log('currentlyRegistered[i]: ', this.currentlyRegistered[i]);
+      console.log('currentlyRegistered[i - 1]: ', this.currentlyRegistered[i - 1]);
+      console.log('type', typeof this.currentlyRegistered[i]);
+      //Are we at the end of the registry?
+      if(typeof this.currentlyRegistered[i - 1] === 'undefined') {
+        console.log('case 1');
+        //This is the largest number
+        return i;
+      //Did we add a number bigger than nextAvailableNumber?
+      } else if (this.currentlyRegistered[this.currentlyRegistered.length - 1] > this.nextAvailableNumber && this.currentlyRegistered.indexOf(this.nextAvailableNumber) < 0) {
+        //it's still the smallest
+        console.log('case 2');
+        return this.nextAvailableNumber;
+      //Did we add the nextAvailableNumber?
+      } else if (this.currentlyRegistered[this.nextAvailableNumber - 1] === this.nextAvailableNumber) {
+        //Is the next number available?
+        if ( typeof this.currentlyRegistered[this.nextAvailableNumber] === undefined) {
+          //return the next number
+          return this.nextAvailableNumber + 1;
+        }
+
+        if (this.currentlyRegistered[this.nextAvailableNumber] > this.nextAvailableNumber) {
+          return this.nextAvailableNumber + 1;
+        }
+      }
+        console.log('case 4');
+      //return this.nextAvailableNumber + 1;
+    }
+  };
+
+  /**
+  @function addCustomNumber adds a user selected number to the registry, if available
+  @returns currentlyRegistered or throws an error if the number is already taken
+  **/
+  this.addCustomNumber = function(customNumber) {
+    //ensure not already present
+    if(this.currentlyRegistered.indexOf(customNumber) < 0) {
+      //if the customNumber is the largest value just push it on the end
+      if(this.currentlyRegistered[this.currentlyRegistered.length - 1] < customNumber) {
+        this.currentlyRegistered.push(customNumber);
+      } else {
+        //Using same logic as determining next available number
+        this.currentlyRegistered.splice(this.nextAvailableNumber - 1, 0, customNumber);
+      }
+      this.nextAvailableNumber = this.determineNextAvailableNumber();
+      return this.currentlyRegistered;
+    } else {
+      throw new Error(customNumber + ' is already taken, please try again.');
+    }
+  };
+
+  /**
+  @function deleteNumber removes the user selected number from currentlyRegistered
+  @returns currentlyRegistered or throws an error if the number does not exist
+  **/
+  this.deleteNumber = function(selectedNumber) {
+    var selectedIndex = this.currentlyRegistered.indexOf(selectedNumber);
+    if(selectedIndex >= 0) {
+      this.currentlyRegistered.splice(selectedIndex, 1);
+      if(selectedNumber < this.nextAvailableNumber) {
+        this.nextAvailableNumber = selectedNumber;
+      } else {
+        this.nextAvailableNumber = this.determineNextAvailableNumber();
+      }
+      console.log('new next delete: ', this.nextAvailableNumber);
+      return this.currentlyRegistered;
+    } else {
+      throw new Error(selectedNumber + ' does not exist in the registry, please try again.');
+    }
+  };
+};
+
+if(typeof exports !== 'undefined') {
+  exports.Registry = Registry;
+}
