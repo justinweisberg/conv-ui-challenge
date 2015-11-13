@@ -1,1 +1,26 @@
-mocha
+{
+  "name": "conversant-ui-challenge",
+  "version": "1.0.0",
+  "description": "Justin Weisberg's Completion of the UI Challenge",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.3.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/justinweisberg/conv-ui-challenge.git"
+  },
+  "author": "Justin Weisberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justinweisberg/conv-ui-challenge/issues"
+  },
+  "homepage": "https://github.com/justinweisberg/conv-ui-challenge"
+}
